@@ -28,6 +28,26 @@ type BalanceAccountResponse struct {
 	Saldos   saldos       `json:"saldos"`
 }
 
+type ListSubAccountsResponse struct {
+	COD      string           `json:"COD"`
+	Mensagem string           `json:"Mensagem"`
+	Cadastro []SubAccountItem `json:"data"`
+}
+
+type SubAccountItem struct {
+	IDSubconta string `json:"id_subconta"`
+	Nome       string `json:"nome"`
+	Email      string `json:"email"`
+	SaldoRAS   string `json:"saldo_ras"`
+	SaldoBTC   string `json:"saldo_btc"`
+	SaldoETH   string `json:"saldo_eth"`
+	SaldoDASH  string `json:"saldo_dash"`
+	SaldoUSDT  string `json:"saldo_usdt"`
+	SaldoBRL   string `json:"saldo_brl"`
+	SaldoDOLAR string `json:"saldo_dolar"`
+	Status     string `json:"status"`
+}
+
 type AccountData struct {
 	ID       string `json:"id"`
 	Nome     string `json:"nome"`
@@ -79,6 +99,19 @@ func (p AccountService) BalanceSubAccount(subconta string) (*BalanceAccountRespo
 		return nil, nil, errors.New("subconta is empty")
 	}
 	err, errAPI := p.client.Request("POST", "/v1/privado/exibir_balanco_subconta", &BalanceAccountRequest{Subconta: subconta}, &response)
+	if err != nil {
+		return nil, nil, err
+	}
+	if errAPI != nil {
+		return nil, errAPI, nil
+	}
+	return response, nil, nil
+}
+
+//ListSubAccount - listar subcontas
+func (p AccountService) ListSubAccount() (*ListSubAccountsResponse, *Error, error) {
+	var response *ListSubAccountsResponse
+	err, errAPI := p.client.Request("GET", "/v1/privado/listar_subconta", nil, &response)
 	if err != nil {
 		return nil, nil, err
 	}
