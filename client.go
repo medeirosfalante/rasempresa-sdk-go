@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -56,6 +57,7 @@ func (client *APIClient) Request(method, action string, query interface{}, out i
 	if err != nil {
 		return err, nil
 	}
+
 	req.Header.Add("KEY", client.Key)
 	req.Header.Add("Secret", client.Secret)
 	if method == "POST" {
@@ -68,6 +70,10 @@ func (client *APIClient) Request(method, action string, query interface{}, out i
 	bodyResponse, err := ioutil.ReadAll(res.Body)
 	if res.StatusCode > 201 {
 		return errors.New(string(bodyResponse)), nil
+	}
+	if client.Env == "develop" {
+		log.Printf("full url request %s \n", endpoint)
+		log.Printf("body response %s \n", string(bodyResponse))
 	}
 	err = json.Unmarshal(bodyResponse, &out)
 	if err != nil {
