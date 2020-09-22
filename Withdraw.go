@@ -21,7 +21,7 @@ type WithdrawCreate struct {
 //WithdrawResponse - struct de resposta ao criar uma subconta
 type WithdrawResponse struct {
 	COD      string `json:"COD"`
-	ID       string `json:"ID"`
+	ID       int    `json:"ID"`
 	Mensagem string `json:"Mensagem"`
 }
 
