@@ -31,7 +31,7 @@ type Error struct {
 //New - create a new client
 func New(Key, Secret, env string) *APIClient {
 	return &APIClient{
-		client: &http.Client{Timeout: 60 * time.Second},
+		client: &http.Client{Timeout: 120 * time.Second},
 		Env:    env,
 		Key:    Key,
 		Secret: Secret,
@@ -40,7 +40,7 @@ func New(Key, Secret, env string) *APIClient {
 
 func (client *APIClient) Request(method, action string, query interface{}, out interface{}) (error, *Error) {
 	if client.client == nil {
-		client.client = &http.Client{Timeout: 60 * time.Second}
+		client.client = &http.Client{Timeout: 120 * time.Second}
 	}
 	endpoint := fmt.Sprintf("%s/%s", client.devProd(), action)
 	q := url.Values{}
